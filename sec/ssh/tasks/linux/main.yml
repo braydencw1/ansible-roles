@@ -1,0 +1,22 @@
+- name: Ensure SSH does not allow Password Authentication
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+  become: True
+
+- name: Put Pubkey into Authorized Keys
+  ansible.posix.authorized_key:
+    user: "{{ ansible_user }}"
+    state: present
+    key: "{{ item }}"
+  loop: "{{ ansible_pubkeys }}"
+  become: True
+
+- name: Remove old Pubkey from Authorized Keys
+  ansible.posix.authorized_key:
+    user: "{{ ansible_user }}"
+    state: absent
+    key: "{{ item }}"
+  loop: "{{ ansible_legacy_pubkeys }}"
+  become: True

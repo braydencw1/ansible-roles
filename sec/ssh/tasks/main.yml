@@ -1,0 +1,38 @@
+######## Disable Password SSH ########
+- name: Deny Password for SSH Linux
+  ansible.builtin.include_tasks: linux/main.yml
+  when: ansible_system == "Linux"
+
+- name: Restart SSH via systemctl
+  ansible.builtin.include_tasks: linux/service.yml
+  when: 
+    - ansible_system == "Linux"
+    - ansible_distribution != "Slackware"
+
+- name: Restart SSH for Unraid
+  ansible.builtin.include_tasks: linux/full.yml
+  when:
+    - ansible_system == "Linux"
+    - ansible_distribution == "Slackware"
+
+### Windows ###
+- name: Deny Password for SSH Windows
+  ansible.builtin.include_tasks: windows/main.yml
+  when: ansible_system == "Win32NT"
+
+- name: Restart Windows sshd Service
+  ansible.builtin.include_tasks: windows/restart.yml
+  when: ansible_system == "Win32NT"
+
+######## Copy SSH Config ########
+- name: Copy SSH Config Linux
+  ansible.builtin.include_tasks: linux/import.yml
+  when:
+    - ansible_system == "Linux"
+    - sshd_config_xfer
+
+- name: Copy SSH Config Windows
+  ansible.builtin.include_tasks: windows/import.yml
+  when: 
+    - ansible_system == "Win32NT"
+    - sshd_config_xfer

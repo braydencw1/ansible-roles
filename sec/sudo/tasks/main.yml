@@ -1,0 +1,10 @@
+- name: Allow Brayden to sudo without password
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    line: "{{ ansible_user }} ALL=(ALL) NOPASSWD:  ALL"
+    state: present
+  become: True
+  when:
+    - ansible_system == "Linux"
+    - ansible_distribution != "Slackware"
+    - ansible_user: != "root"

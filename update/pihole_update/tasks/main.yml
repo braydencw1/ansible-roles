@@ -1,0 +1,10 @@
+- name: "PiHole Update"
+#  hosts: pi, kube
+  ansible.builtin.shell:
+    cmd: pihole -up
+  become: yes
+
+- name: "PiHole Update Gravity"
+  ansible.builtin.shell:
+    cmd: pihole -g
+  become: yes

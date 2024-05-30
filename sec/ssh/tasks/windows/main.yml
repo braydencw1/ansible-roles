@@ -1,0 +1,20 @@
+- name: Ensure SSH does not allow Password Authentication Windows
+  community.windows.win_lineinfile:
+    path: C:\ProgramData\ssh\sshd_config
+    regexp: '^PasswordAuthentication'
+    line: 'PasswordAuthentication no'
+
+- name: Ensure New Pubkeys are added
+  community.windows.win_lineinfile:
+    path: "{{ win_authorized_key }}"
+    state: present
+    line: "{{ item }}"
+  loop: "{{ ansible_pubkeys }}"
+
+
+- name: Ensure old Pubkeys are removed
+  community.windows.win_lineinfile:
+    path: "{{ win_authorized_key }}"
+    state: absent
+    line: "{{ item }}"
+  loop: "{{ ansible_legacy_pubkeys }}"

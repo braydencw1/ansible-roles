@@ -1,0 +1,5 @@
+- name: Copy SSH Config Linux
+  ansible.builtin.copy:
+    src: "{{ ansible_env.HOME }}/.ssh/config"
+    dest: "{{ ansible_env.HOME }}/.ssh/config"
+    force: true

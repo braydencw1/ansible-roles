@@ -1,0 +1,30 @@
+- name: DNF Update
+  ansible.builtin.command: dnf update
+
+- name: DNF Upgrade Refresh
+  ansible.builtin.command: dnf upgrade --refresh
+
+- name: DNF Install dnf-plugin-system-upgrade
+  ansible.builtin.command: dnf install dnf-plugin-system-upgrade
+
+- name: DNF refresh upgrade
+  ansible.builtin.command: dnf --refresh upgrade -y
+
+- name: "DNF system upgrade release Server to version {{ Fedora_Upgrade_Version }}"
+  ansible.builtin.command: "dnf system-upgrade download --releasever={{ Fedora_Upgrade_Version }} -y"
+
+- name: "DNF Upgrade Reboot"
+  ansible.builtin.command: dnf system-upgrade reboot -y
+  when: inventory_hostname != "pydev"
+
+- name: Wait for the machine to come back online
+  ansible.builtin.wait_for_connection:
+    connect_timeout: 60
+    sleep: 5
+    delay: 5
+    timeout: 1800
+  ignore_unreachable: true
+
+- name: "DNF Upgrade Reboot"
+  ansible.builtin.command: dnf system-upgrade reboot -y
+  when: inventory_hostname == "pydev"

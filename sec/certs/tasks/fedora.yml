@@ -1,0 +1,23 @@
+- name: "Remove Old Cert"
+  ansible.builtin.file:
+    path: "/etc/pki/ca-trust/source/anchors/*"
+    state: absent
+  ignore_errors: true
+  become: yes
+  when: cert_rotate
+
+
+- name: Copy new cert
+  ansible.builtin.copy:
+    src: "{{ new_ca_cert_path }}"
+    dest: "/etc/pki/ca-trust/source/anchors/{{ new_ca_cert_name }}"
+    owner: root
+    group: root
+    mode: '0751'
+    force: yes
+  become: yes
+
+- name: "Run Reload"
+  ansible.builtin.shell:
+    cmd: "sudo update-ca-trust"
+  become: yes

@@ -1,0 +1,3 @@
+- name: Restart SSHD Service for Unraid
+  ansible.builtin.shell:
+    cmd: /etc/rc.d/rc.sshd restart

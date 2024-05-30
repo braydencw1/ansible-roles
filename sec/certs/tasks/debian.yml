@@ -1,0 +1,32 @@
+- name: "Create /usr/local/share/ca-certificates/extra/"
+  ansible.builtin.file:
+    path: /usr/local/share/ca-certificates/extra/
+    state: directory
+    owner: root
+    group: root
+    mode: '0751'
+    force: yes
+  become: yes
+
+- name: "Remove Old Cert"
+  ansible.builtin.file:
+    path: "/usr/local/share/ca-certificates/extra/*"
+    state: absent
+  become: yes
+  ignore_errors: true
+  when: cert_rotate
+
+- name: Copy new cert
+  ansible.builtin.copy:
+    src: "{{ new_ca_cert_path }}"
+    dest: "/usr/local/share/ca-certificates/extra/{{ new_ca_cert_name }}"
+    owner: root
+    group: root
+    mode: '0751'
+    force: yes
+  become: yes
+
+- name: "Run Reload"
+  ansible.builtin.shell:
+    cmd: "sudo update-ca-certificates"
+  become: yes

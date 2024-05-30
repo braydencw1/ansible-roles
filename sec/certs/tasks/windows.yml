@@ -1,0 +1,34 @@
+- name: "Create {{ windows_temp_dir }}"
+  ansible.windows.win_file:
+    path: "{{ windows_temp_dir }}"
+    state: directory
+
+- name: "Copy old Cert for removal"
+  ansible.windows.win_copy:
+    src: "{{ old_ca_cert_path }}"
+    dest: "{{ windows_temp_dir }}\\{{ old_ca_cert_name }}"
+
+
+- name: "Copy new Cert"
+  ansible.windows.win_copy:
+    src: "{{ new_ca_cert_path }}"
+    dest: "{{ windows_temp_dir }}\\{{ new_ca_cert_name }}"
+
+- name: Remove Old Cert
+  ansible.windows.win_certificate_store:
+    path: "{{ windows_temp_dir }}\\{{ old_ca_cert_name }}"
+    state: absent
+  when: cert_rotate
+  ignore_errors: true
+
+- name: Add new Cert
+  ansible.windows.win_certificate_store:
+    path: "{{ windows_temp_dir }}\\{{ new_ca_cert_name }}"
+    store_name: "Root"
+    store_location: "LocalMachine"
+    state: present
+
+- name: "Remove {{ windows_temp_dir }}"
+  ansible.windows.win_file:
+    path: "{{ windows_temp_dir }}"
+    state: absent

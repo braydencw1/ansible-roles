@@ -1,0 +1,16 @@
+- name: Perform Fedora / RedHat Certs
+  ansible.builtin.include_tasks: fedora.yml
+  when: ansible_distribution == "RedHat" or ansible_distribution == "Fedora"
+  args:
+    apply:
+      become: true
+
+- name: Perform Debian / Ubuntu Certs
+  ansible.builtin.include_tasks: debian.yml
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  args:
+    apply:
+      become: true
+
+- ansible.builtin.include_tasks: windows.yml
+  when: ansible_system == "Win32NT"
