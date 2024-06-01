@@ -1,5 +1,4 @@
 - name: "PiHole Update"
-#  hosts: pi, kube
   ansible.builtin.shell:
     cmd: pihole -up
   become: yes

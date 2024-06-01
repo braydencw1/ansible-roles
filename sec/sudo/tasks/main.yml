@@ -7,4 +7,4 @@
   when:
     - ansible_system == "Linux"
     - ansible_distribution != "Slackware"
-    - ansible_user: != "root"
+    - ansible_user != "root"

@@ -9,14 +9,6 @@
   ansible.posix.authorized_key:
     user: "{{ ansible_user }}"
     state: present
-    key: "{{ item }}"
-  loop: "{{ ansible_pubkeys }}"
-  become: True
-
-- name: Remove old Pubkey from Authorized Keys
-  ansible.posix.authorized_key:
-    user: "{{ ansible_user }}"
-    state: absent
-    key: "{{ item }}"
-  loop: "{{ ansible_legacy_pubkeys }}"
+    key: "{{ ansible_pubkeys | join('\n') }}"
+    exclusive: true
   become: True

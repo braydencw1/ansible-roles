@@ -29,10 +29,10 @@
   ansible.builtin.include_tasks: linux/import.yml
   when:
     - ansible_system == "Linux"
-    - sshd_config_xfer
+    - sshd_config_xfer is defined and sshd_config_xfer
 
 - name: Copy SSH Config Windows
   ansible.builtin.include_tasks: windows/import.yml
   when: 
     - ansible_system == "Win32NT"
-    - sshd_config_xfer
+    - sshd_config_xfer is defined and sshd_config_xfer
