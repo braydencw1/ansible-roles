@@ -4,15 +4,10 @@
     regexp: '^PasswordAuthentication'
     line: 'PasswordAuthentication no'
 
-- name: Remove authorized keys
-  ansible.windows.win_file: 
-    path: "{{ win_authorized_key }}"
-    state: absent
-
-- name: Create authorized keys
-  ansible.windows.win_file:
-    path: "{{ win_authorized_key }}"
-    state: touch
+- name: Clear file contents
+  ansible.windows.win_powershell:
+    script: |
+      $null > "{{ ansible_pubkeys }}"
 
 - name: Ensure New Pubkeys are added
   community.windows.win_lineinfile:
@@ -20,4 +15,3 @@
     state: present
     line: "{{ item }}"
   loop: "{{ ansible_pubkeys }}"
-
