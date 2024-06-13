@@ -1,0 +1,11 @@
+- name: Download
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/calico.yaml
+    dest: ~/.kube
+
+- name: Apply Calico
+  ansible.builtin.command: kubectl apply -f ~/.kube/calico.yaml
+    
+#  # kubernetes.core.k8s:
+#    state: present
+#    src: ~/.kube/calico.yml

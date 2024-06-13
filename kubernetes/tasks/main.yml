@@ -1,0 +1,17 @@
+- name: Include Kube for Debian
+  ansible.builtin.include_tasks: debian.yml
+  when:
+    - ansible_distribution is defined
+    - ansible_distribution == "Debian"
+
+- name: Configure Kubernetes a bit further
+  ansible.builtin.include_tasks: configure.yml
+  when: kube_controller
+
+- name: Join cluster
+  ansible.builtin.command: "{{ rl_global_join.stdout }}"
+  when: not kube_controller 
+
+- name: Configure Calico
+  ansible.builtin.include_tasks: calico.yaml
+  when: kube_controller

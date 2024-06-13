@@ -1,0 +1,31 @@
+- name: Stat GPG keyring file
+  ansible.builtin.stat:
+    path: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  register: rl_keyring_file
+
+- name: Import GPG key
+  ansible.builtin.shell: "curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg"
+  when: not rl_keyring_file.stat.exists
+
+- name: Add kubernetes repo
+  ansible.builtin.apt_repository:
+    repo: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /'
+    state: present
+    filename: kubernetes
+
+- name: Install kube*
+  ansible.builtin.apt:
+    name:
+      - kubelet
+      - kubectl
+      - kubeadm
+      - apt-transport-https 
+      - ca-certificates 
+    state: "present"
+    update_cache: true
+
+- name: Enable kubelet
+  ansible.builtin.systemd_service:
+    name: kubelet
+    state: started
+    enabled: true

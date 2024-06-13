@@ -20,6 +20,7 @@
     - "/home/{{ ansible_user }}/.bashrc"
   when: 
     - ansible_user != 'root'
+  
 - name: Ensure ll alias is in shell config for aditional users
   ansible.builtin.lineinfile:
     path: "/home/{{ item }}/.bashrc"

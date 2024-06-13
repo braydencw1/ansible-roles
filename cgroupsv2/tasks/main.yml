@@ -1,0 +1,9 @@
+- name: Change to Cgroupsv2
+  when: ansible_system == "Linux"
+  block:
+    - name: check stuff
+      ansible.builtin.shell: "cat /etc/default/grub"
+      register: rl_result
+
+    - name: Include configuration
+      ansible.builtin.include_tasks: configure.yml

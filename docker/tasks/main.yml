@@ -1,0 +1,5 @@
+- name: Include Docekr tasks for Debian
+  ansible.builtin.include_tasks: debian.yml
+  when:
+    - ansible_distribution is defined
+    - ansible_distribution == "Debian"
