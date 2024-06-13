@@ -13,5 +13,5 @@
   when: not kube_controller 
 
 - name: Configure Calico
-  ansible.builtin.include_tasks: calico.yaml
+  ansible.builtin.include_tasks: calico.yml
   when: kube_controller
