@@ -19,7 +19,7 @@
     path: "{{ windows_temp_dir }}\\{{ old_ca_cert_name }}"
     state: absent
   when: cert_rotate
-  ignore_errors: true
+  failed_when: false
 
 - name: Add new Cert
   ansible.windows.win_certificate_store:

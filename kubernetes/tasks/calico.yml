@@ -2,10 +2,8 @@
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/calico.yaml
     dest: ~/.kube
+    mode: "0644"
 
 - name: Apply Calico
   ansible.builtin.command: kubectl apply -f ~/.kube/calico.yaml
-    
-#  # kubernetes.core.k8s:
-#    state: present
-#    src: ~/.kube/calico.yml
+  changed_when: false

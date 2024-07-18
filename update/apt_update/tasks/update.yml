@@ -1,6 +1,6 @@
 - name: "APT upgrade"
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
     upgrade: "yes"
     lock_timeout: 60
-  become: yes
+  become: true

@@ -6,12 +6,13 @@
 
 - name: Configure Kubernetes a bit further
   ansible.builtin.include_tasks: configure.yml
-  when: kube_controller
+  when: kube_controller | default(false)
 
 - name: Join cluster
   ansible.builtin.command: "{{ rl_global_join.stdout }}"
-  when: not kube_controller 
+  changed_when: false
+  when: not kube_controller | default(false)
 
 - name: Configure Calico
   ansible.builtin.include_tasks: calico.yml
-  when: kube_controller
+  when: kube_controller | default(false)

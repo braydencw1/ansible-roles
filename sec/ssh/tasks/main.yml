@@ -5,7 +5,7 @@
 
 - name: Restart SSH via systemctl
   ansible.builtin.include_tasks: linux/service.yml
-  when: 
+  when:
     - ansible_system == "Linux"
     - ansible_distribution != "Slackware"
 
@@ -15,7 +15,6 @@
     - ansible_system == "Linux"
     - ansible_distribution == "Slackware"
 
-### Windows ###
 - name: Deny Password for SSH Windows
   ansible.builtin.include_tasks: windows/main.yml
   when: ansible_system == "Win32NT"
@@ -24,15 +23,14 @@
   ansible.builtin.include_tasks: windows/restart.yml
   when: ansible_system == "Win32NT"
 
-######## Copy SSH Config ########
-- name: Copy SSH Config Linux
+- name: Import tasks for copying SSH Config Linux
   ansible.builtin.include_tasks: linux/import.yml
   when:
     - ansible_system == "Linux"
-    - sshd_config_xfer is defined and sshd_config_xfer
+    - sshd_config_xfer | default(false)
 
-- name: Copy SSH Config Windows
+- name: Import tasks for copying SSH Config Windows
   ansible.builtin.include_tasks: windows/import.yml
-  when: 
+  when:
     - ansible_system == "Win32NT"
-    - sshd_config_xfer is defined and sshd_config_xfer
+    - sshd_config_xfer | default(false)

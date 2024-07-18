@@ -1,0 +1,81 @@
+- name: Install Podman
+  ansible.builtin.dnf:
+    name: "{{ podman.packages }}"
+
+- name: "Create {{ podman.user }}"
+  ansible.builtin.user:
+    name: "{{ podman.user }}"
+    comment: "User for rootless podman."
+    home: "{{ podman.home }}"
+    create_home: true
+    shell: "/bin/bash"
+
+- name: Create "{{ podman.group }}"
+  ansible.builtin.group:
+    name: "{{ podman.group }}"
+    state: "present"
+
+- name: Add users to the {{ podman.group }}
+  ansible.builtin.user:
+    name: "{{ item }}"
+    groups: "{{ podman.group }}"
+    append: true
+  loop: "{{ podman.group_users }}"
+
+- name: Configure Firewalld Services
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+    immediate: true
+  with_items: "{{ podman.services }}"
+  when:
+    - podman.services is defined
+    - podman.services is not none
+    - podman.services | length > 0
+
+- name: Configure Firewalld Ports
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    permanent: true
+    state: enabled
+    immediate: true
+  with_items: "{{ podman.ports }}"
+  when:
+    - podman.ports is defined
+    - podman.ports is not none
+    - podman.ports | length > 0
+
+- name: Set SELinux context to container_file_t for {{ podman.app_dir }}
+  ansible.builtin.command: semanage fcontext -a -t container_file_t '/{{ podman.app_dir }}(/.*)?'
+  args:
+    creates: /etc/selinux/targeted/contexts/files/file_contexts.local
+
+- name: Do restorecon on {{ podman.app_dir }}
+  ansible.builtin.command:
+    cmd: "restorecon -Rv {{ podman.app_dir }}"
+  changed_when: false
+
+- name: Create "{{ podman.app_dir }}"
+  ansible.builtin.file:
+    state: "directory"
+    owner: "root"
+    group: "{{ podman.group }}"
+    mode: "0775"
+    path: "{{ podman.app_dir }}"
+
+- name: Set ACL for {{ podman.app_dir }}
+  ansible.posix.acl:
+    path: "{{ podman.app_dir }}"
+    entity: "{{ podman.group }}"
+    etype: group
+    permissions: rwx
+    state: present
+
+- name: Create podman-compose dir
+  ansible.builtin.file:
+    path: "{{ podman.app_dir }}/podman-compose"
+    state: "directory"
+    owner: "root"
+    group: "{{ podman.group }}"
+    mode: "0775"

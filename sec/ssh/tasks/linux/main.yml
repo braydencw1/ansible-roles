@@ -3,7 +3,7 @@
     path: /etc/ssh/sshd_config
     regexp: '^PasswordAuthentication'
     line: 'PasswordAuthentication no'
-  become: True
+  become: true
 
 - name: Put Pubkey into Authorized Keys
   ansible.posix.authorized_key:
@@ -11,4 +11,4 @@
     state: present
     key: "{{ ansible_pubkeys | join('\n') }}"
     exclusive: true
-  become: True
+  become: true

@@ -1,16 +1,15 @@
-- name: "include DNF Update Task"
+- name: "Include DNF Update Task"
   ansible.builtin.include_tasks: update.yml
   when: ansible_distribution == "Fedora" or ansible_distribution == "RedHat"
 
 
-- name: "include Fedora Upgrade"
+- name: "Include Fedora Upgrade"
   ansible.builtin.include_tasks: upgrade.yml
   when: ansible_distribution == "Fedora" and Fedora_Upgrade is defined
   args:
     apply:
       become: true
 
-- name: "include Daemon Reload"
+- name: "Include Daemon Reload"
   ansible.builtin.include_tasks: ../../../maintenance/daemon-reload/tasks/main.yml
   when: ansible_distribution == "Fedora" or ansible_distribution == "RedHat"
-

@@ -1,8 +1,9 @@
 - name: Change to Cgroupsv2
   when: ansible_system == "Linux"
   block:
-    - name: check stuff
-      ansible.builtin.shell: "cat /etc/default/grub"
+    - name: Check grub configuration
+      ansible.builtin.command: "cat /etc/default/grub"
+      changed_when: false
       register: rl_result
 
     - name: Include configuration

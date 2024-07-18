@@ -5,28 +5,31 @@
       ansible.builtin.lineinfile:
         path: "/etc/sysctl.d/kubernetes.conf"
         line: "{{ item }}"
+        mode: "0644"
         state: present
         create: true
       loop:
         - net.bridge.bridge-nf-call-ip6tables = 1
         - net.bridge.bridge-nf-call-iptables = 1
         - net.ipv4.ip_forward = 1
-    
+
     - name: Ensure br_netfilter is enabled.
       community.general.modprobe:
         name: br_netfilter
         state: present
-    
+
     - name: Ensure overlay is enabled.
       community.general.modprobe:
         name: overlay
         state: present
-    
+
     - name: Reconfigure sysctl
       ansible.builtin.command: "sysctl -p"
-    
-    - name: br_netfilter 
+      changed_when: false
+
+    - name: Set br_netfilter
       ansible.builtin.lineinfile:
         path: /etc/modules-load.d/br_netfilter.conf
+        mode: "0644"
         create: true
         line: "br_netfilter"

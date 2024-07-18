@@ -1,21 +1,25 @@
 - name: Perform kube admin init
   ansible.builtin.command:
     cmd: kubeadm init
+  changed_when: false
 
 - name: Create ~/.kube
   ansible.builtin.file:
     state: directory
     path: ~/.kube
- 
+    mode: "0600"
+
 - name: Copy admin config
   ansible.builtin.copy:
     remote_src: true
     src: /etc/kubernetes/admin.conf
     dest: ~/.kube/config
-# 
+    mode: "0600"
+
 - name: Create Kubeadm join command
-  ansible.builtin.command: 
+  ansible.builtin.command:
     cmd: "kubeadm token create --print-join-command"
+  changed_when: false
   register: rl_join_command
 
 - name: Global

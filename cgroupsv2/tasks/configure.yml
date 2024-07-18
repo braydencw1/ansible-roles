@@ -1,14 +1,18 @@
-- name: cgroup block
+- name: Cgroup block
+  when: "'systemd.unified_cgroups_hierarchy=1' not in rl_result.stdout"
   block:
     - name: Grab info
-      ansible.builtin.shell:
+      ansible.builtin.command:
         cmd: "grep '^GRUB_CMDLINE_LINUX=' /etc/default/grub"
+      changed_when: false
       register: rl_grub_line
+
     - name: Update grub confing
       ansible.builtin.lineinfile:
         path: /etc/default/grub
         regexp: '^GRUB_CMDLINE_LINUX='
         line: "{{ rl_grub_line.stdout | regex_replace('\"$', '') }} systemd.unified_cgroups_hierarchy=1\""
+
     - name: Update
       ansible.builtin.command: "update-grub"
-  when: "'systemd.unified_cgroups_hierarchy=1' not in rl_result.stdout" 
+      changed_when: false

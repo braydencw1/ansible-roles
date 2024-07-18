@@ -18,9 +18,9 @@
     insertafter: EOF
   with_items:
     - "/home/{{ ansible_user }}/.bashrc"
-  when: 
+  when:
     - ansible_user != 'root'
-  
+
 - name: Ensure ll alias is in shell config for aditional users
   ansible.builtin.lineinfile:
     path: "/home/{{ item }}/.bashrc"
@@ -28,5 +28,5 @@
     insertafter: EOF
   with_items:
     - "{{ additional_users }}"
-  when: 
+  when:
     - additional_users is defined

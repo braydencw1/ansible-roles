@@ -1,0 +1,32 @@
+podman:
+  user: podmaster
+  home: "/home/podmaster"
+  app_dir: "/app"
+  packages:
+    - "podman"
+    - "podman-compose"
+  group: "podman"
+  services:
+    - "http"
+    - "https"
+  group_users:
+    - "{{ ansible_user }}"
+    - "podmaster"
+podman_compose_config:
+  version: "3.8"
+  services:
+    web:
+      image: nginx:latest
+      ports:
+        - "80:80"
+        - "6942:6942"
+      volumes:
+        - /app/nginx/html:/usr/share/nginx/html
+    db:
+      image: postgres:latest
+      environment:
+        POSTGRES_DB: mydb
+        POSTGRES_USER: user
+        POSTGRES_PASSWORD: password
+      volumes:
+        - /app/nginx/db:/var/lib/postgresql/data

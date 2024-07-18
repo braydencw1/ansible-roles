@@ -4,7 +4,8 @@
   block:
     - name: Disable swap immediately
       ansible.builtin.command: swapoff -a
-    
+      changed_when: false
+
     - name: Comment out swap entry in /etc/fstab
       ansible.builtin.lineinfile:
         path: /etc/fstab
@@ -12,13 +13,11 @@
         line: '# \1 none swap sw 0 0'
         state: present
         backrefs: true
-    
+
     - name: Set vm.swappiness to 0
-      ansible.builtin.sysctl:
+      ansible.posix.sysctl:
         name: vm.swappiness
         value: 0
         state: present
         sysctl_set: true
         reload: true
-    
-

@@ -1,9 +1,11 @@
 - name: "PiHole Update"
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: pihole -up
-  become: yes
+  changed_when: false
+  become: true
 
 - name: "PiHole Update Gravity"
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: pihole -g
-  become: yes
+  changed_when: false
+  become: true

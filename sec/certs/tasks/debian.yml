@@ -5,15 +5,15 @@
     owner: root
     group: root
     mode: '0751'
-    force: yes
-  become: yes
+    force: true
+  become: true
 
 - name: "Remove Old Cert"
   ansible.builtin.file:
     path: "/usr/local/share/ca-certificates/extra/*"
     state: absent
-  become: yes
-  ignore_errors: true
+  become: true
+  failed_when: false
   when: cert_rotate
 
 - name: Copy new cert
@@ -23,10 +23,11 @@
     owner: root
     group: root
     mode: '0751'
-    force: yes
-  become: yes
+    force: true
+  become: true
 
 - name: "Run Reload"
-  ansible.builtin.shell:
+  ansible.builtin.command:
     cmd: "sudo update-ca-certificates"
-  become: yes
+  changed_when: false
+  become: true

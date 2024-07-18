@@ -1,7 +1,7 @@
-- name: "include Apt Update Task"
+- name: "Include Apt Update Task"
   ansible.builtin.include_tasks: update.yml
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
 
-- name: "include Daemon Reload"
+- name: "Include Daemon Reload"
   ansible.builtin.include_tasks: ../../../maintenance/daemon-reload/tasks/main.yml
   when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"

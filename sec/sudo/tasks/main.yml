@@ -3,7 +3,7 @@
     path: /etc/sudoers
     line: "{{ ansible_user }} ALL=(ALL) NOPASSWD:  ALL"
     state: present
-  become: True
+  become: true
   when:
     - ansible_system == "Linux"
     - ansible_distribution != "Slackware"
