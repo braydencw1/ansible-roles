@@ -1,0 +1,18 @@
+- name: Reboot when required for RPM
+  ansible.builtin.reboot:
+  when:
+    - r_dnf_res is defined
+    - r_dnf_res.results is not none
+    - "'kernel' in r_dnf_res.results"
+    - ansible_system == "Linux"
+    - not controller | default(false)
+    - not hypervisor | default(false)
+
+- name: Reboot if required Apt
+  ansible.builtin.reboot:
+  when:
+    - r_apt_res is defined
+    - r_apt_res.stdout is not none
+    - "'kernel' in r_apt_res.stdout"
+    - ansible_system == "Linux"
+    - not hypervisor | default(false)

@@ -13,5 +13,8 @@
   community.windows.win_lineinfile:
     path: "{{ win_authorized_key }}"
     state: present
-    line: "{{ item }}"
+    line: "{{ r_pubkeys }}"
+    create: true
   loop: "{{ ansible_pubkeys }}"
+  loop_control:
+    loop_var: "r_pubkeys"

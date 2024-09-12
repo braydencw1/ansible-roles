@@ -3,3 +3,4 @@
     state: restarted
     name: sshd
   become: true
+  when: (r_p_auth.changed or r_auth_key.changed)

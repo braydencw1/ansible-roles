@@ -2,3 +2,4 @@
   ansible.builtin.dnf:
     name: "*"
     state: latest # noqa package-latest
+  register: r_dnf_res

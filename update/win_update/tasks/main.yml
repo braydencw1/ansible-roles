@@ -1,3 +1,0 @@
-- name: Include Update Tasks
-  ansible.builtin.include_tasks: update.yml
-  when: ansible_system == 'Win64NT'

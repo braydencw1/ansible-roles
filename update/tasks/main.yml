@@ -1,0 +1,20 @@
+- name: "Include DNF Update Task"
+  ansible.builtin.include_tasks: dnf/update.yml
+  when: ansible_distribution in ["Fedora", "RedHat"]
+
+- name: "Include Fedora Upgrade"
+  ansible.builtin.include_tasks: dnf/upgrade.yml
+  when:
+    - ansible_distribution == "Fedora"
+    - Fedora_Upgrade is defined
+
+- name: "Include Apt Update Task"
+  ansible.builtin.include_tasks: apt/update.yml
+  when: ansible_distribution in ["Debian", "Ubuntu"]
+
+- name: Include Update Tasks
+  ansible.builtin.include_tasks: win/update.yml
+  when: ansible_system == 'Win64NT'
+
+- name: Include tasks for rebooting
+  ansible.builtin.include_tasks: reboot/main.yml

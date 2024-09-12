@@ -3,4 +3,7 @@
     update_cache: true
     upgrade: "yes"
     lock_timeout: 60
+    autoremove: true
+    autoclean: true
   become: true
+  register: r_apt_res

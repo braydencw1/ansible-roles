@@ -4,6 +4,7 @@
     regexp: '^PasswordAuthentication'
     line: 'PasswordAuthentication no'
   become: true
+  register: r_p_auth
 
 - name: Put Pubkey into Authorized Keys
   ansible.posix.authorized_key:
@@ -12,3 +13,4 @@
     key: "{{ ansible_pubkeys | join('\n') }}"
     exclusive: true
   become: true
+  register: r_auth_key

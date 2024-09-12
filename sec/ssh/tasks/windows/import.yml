@@ -1,4 +1,5 @@
 - name: Copy SSH Config Windows
   ansible.windows.win_copy:
-    src: "/{{ ansible_env.HOME }}/.ssh/config"
-    dest: 'C:\Users\{{ ansible_user }}\.ssh\config'
+    src: "/home/{{ ansible_controller_user }}/.ssh/config"
+    dest: "C:\\Users\\{{ ansible_user }}\\.ssh\\config"
+    force: true

@@ -13,7 +13,9 @@
     - owner: "{{ ansible_user }}"
       path: "/home/{{ ansible_user }}/update.sh"
       group: "{{ ansible_user }}"
-  when: ansible_distribution == "Fedora" or ansible_distribution == "RedHat"
+  when:
+    - ansible_distribution in ["Fedora", "RedHat"]
+    - not controller | default(false)
 
 - name: Create Apt Update.sh for Apt
   ansible.builtin.lineinfile:
@@ -30,4 +32,6 @@
     - owner: "{{ ansible_user }}"
       path: "/home/{{ ansible_user }}/update.sh"
       group: "{{ ansible_user }}"
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  when:
+    - ansible_distribution in ["Debian", "Ubuntu"]
+    - not controller | default(false)
