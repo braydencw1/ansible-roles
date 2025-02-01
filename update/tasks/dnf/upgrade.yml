@@ -21,7 +21,9 @@
 - name: "DNF Upgrade Reboot"
   ansible.builtin.command: dnf system-upgrade reboot -y
   changed_when: false
-  when: not controller
+  when: 
+    - not controller | default(false)
+    - inventory_hostname != "blaptop"
 
 - name: Wait for the machine to come back online
   ansible.builtin.wait_for_connection:
@@ -34,4 +36,4 @@
 - name: "DNF Upgrade Reboot"
   ansible.builtin.command: dnf system-upgrade reboot -y
   changed_when: false
-  when: controller
+  when: controller | default (false)

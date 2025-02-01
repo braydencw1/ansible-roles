@@ -46,6 +46,14 @@
     - podman.ports is not none
     - podman.ports | length > 0
 
+- name: Create {{ podman.app_dir }}
+  ansible.builtin.file:
+    mode: "0755"
+    group: "{{ podman.group }}"
+    owner: "{{ podman.user }}"
+    state: "directory"
+    path: "{{ podman.app_dir }}"
+
 - name: Set SELinux context to container_file_t for {{ podman.app_dir }}
   ansible.builtin.command: semanage fcontext -a -t container_file_t '/{{ podman.app_dir }}(/.*)?'
   args:
